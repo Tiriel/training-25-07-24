@@ -23,22 +23,44 @@ class MovieProvider
 
     public function getOne(string $value, SearchType $type = SearchType::Title): Movie
     {
-        $movie = $this->repository->findLikeOmdb($type, $value);
-
+        $movie = $this->searchDb($value, $type);
         if ($movie instanceof Movie) {
             return $movie;
         }
 
-        $data = $this->consumer->fetch($value, $type);
+        $data = $this->searchApi($value, $type);
+        $movie = $this->buildMovie($data);
+
+        $this->saveMovie($movie);
+
+        return $movie;
+    }
+
+    protected function searchDb(string $value, SearchType $type): ?Movie
+    {
+        return $this->repository->findLikeOmdb($type, $value);
+    }
+
+    protected function searchApi(string $value, SearchType $type): array
+    {
+        return $this->consumer->fetch($value, $type);
+    }
+
+    protected function buildMovie(array $data): Movie
+    {
         $movie = $this->transformer->transform($data);
 
-        foreach ($this->genreProvider->getFromString($data['Genre']) as $genre) {
+        $genres = $this->genreProvider->getFromString($data['Genre']);
+        foreach ($genres as $genre) {
             $movie->addGenre($genre);
         }
 
+        return $movie;
+    }
+
+    protected function saveMovie(Movie $movie): void
+    {
         $this->manager->persist($movie);
         $this->manager->flush();
-
-        return $movie;
     }
 }

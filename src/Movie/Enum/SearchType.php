@@ -14,4 +14,13 @@ enum SearchType
             self::Title => 't',
         };
     }
+
+    public static function fromString(string $value): self
+    {
+        return match ($value) {
+            't' => self::Title,
+            'i' => self::Id,
+            default => throw new \InvalidArgumentException(),
+        };
+    }
 }
