@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Movies{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+    <div class="example-wrapper text-center">
+        <h1>Available movies</h1>
+
+        <section class="row row-cols-3 mt-5">
+            {% for movie in movies %}
+                <div class="col">
+                    <a href="{{ path('app_movie_show', {'id': movie.id}) }}">
+                        <div class="card w-75 m-auto">
+                            <img src="{{ movie.poster }}" alt="{{ movie.poster }}">
+                            <div class="card-img-overlay text-white">
+                                <h5 class="card-title">{{ movie.title }}</h5>
+                                <p class="card-text">Release date: {{ movie.releasedAt|date('Y/m/d') }}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% else %}
+                <p>No movies in database yet...</p>
+            {% endfor %}
+        </section>
+        <aside class="row justify-content-center m-auto py-4 px-auto">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="{{ path('app_movie_index', {page: currentPage -1}) }}">Previous</a></li>
+                    {% for num in 1..pageNums %}
+                        <li class="page-item"><a class="page-link {{ num == currentPage ? ' active' }}" href="{{ path('app_movie_index', {page: num}) }}">{{ num }}</a></li>
+                    {% endfor %}
+                    <li class="page-item"><a class="page-link" href="{{ path('app_movie_index', {page: currentPage +1}) }}">Next</a></li>
+                </ul>
+            </nav>
+        </aside>
+    </div>
+{% endblock %}
