@@ -4,11 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Movie;
 use App\Form\MovieType;
-use App\Movie\Consumer\OmdbApiConsumer;
 use App\Movie\Enum\SearchType;
 use App\Movie\Provider\MovieProvider;
-use App\Movie\Transformer\OmdbToGenreTransformer;
-use App\Movie\Transformer\OmdbToMovieTransformer;
 use App\Repository\MovieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
