@@ -4,10 +4,8 @@ namespace App\Controller;
 
 use App\Book\BookManager;
 use App\Entity\Book;
-use App\Entity\User;
 use App\Form\BookType;
 use App\Repository\BookRepository;
-use App\Security\Voter\BookVoter;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,18 +17,9 @@ class BookController extends AbstractController
 {
     #[Route('', name: 'app_book_index', methods: ['GET'])]
     #[Template('book/index.html.twig')]
-    public function index(Request $request, BookRepository $repository): array
+    public function index(Request $request, BookManager $manager): array
     {
-        $limit = 6;
-        $page = $request->query->getInt('page', 1);
-        $pageNums = ceil($repository->count() / $limit);
-        $books = $repository->findBy([], [], $limit, ($page - 1) * $limit);
-
-        return [
-            'books' => $books,
-            'pageNums' => $pageNums,
-            'currentPage' => $page,
-        ];
+        return $manager->getPaginated($request);
     }
 
     #[Route('/{id<\d+>}', name: 'app_book_show', methods: ['GET'])]
@@ -51,9 +40,9 @@ class BookController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $this->getUser();
-            if ($user instanceof User && !$book->getId()) {
-                $book->setCreatedBy($user);
-            }
+            //if ($user instanceof User && !$book->getId()) {
+            //    $book->setCreatedBy($user);
+            //}
             $repository->save($book, true);
 
             return $this->redirectToRoute('app_book_show', ['id' => $book->getId()]);
