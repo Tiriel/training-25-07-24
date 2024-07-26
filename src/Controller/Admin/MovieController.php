@@ -3,7 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Movie;
-use App\Form\Movie1Type;
+use App\Form\MovieType;
 use App\Repository\MovieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +26,7 @@ class MovieController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $movie = new Movie();
-        $form = $this->createForm(Movie1Type::class, $movie);
+        $form = $this->createForm(MovieType::class, $movie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -53,7 +53,7 @@ class MovieController extends AbstractController
     #[Route('/{id}/edit', name: 'app_admin_movie_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Movie $movie, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(Movie1Type::class, $movie);
+        $form = $this->createForm(MovieType::class, $movie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
