@@ -13,7 +13,7 @@ class HelloController extends AbstractController
     #[Route('/hello/{name?World}', name: 'app_hello', requirements: ['name' => '(?:\p{L}|[- ])+'])]
     public function index(string $name, string $sfVersion): Response
     {
-        if ($this->isGranted('ROLE_ADMIN')) {
+        if ($this->isGranted('ROLE_MODERATOR')) {
             dump($sfVersion);
         }
 
