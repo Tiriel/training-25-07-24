@@ -7,5 +7,19 @@
             <twig:NavLink target="app_movie_index" label="Movie"></twig:NavLink>
             <twig:NavLink target="app_main_contact" label="Contact"></twig:NavLink>
         </ul>
+        {% if is_granted('ROLE_ADMIN') %}
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <twig:NavLink target="app_admin_book_index" label="Book Admin"></twig:NavLink>
+            <twig:NavLink target="app_admin_movie_index" label="Movie Admin"></twig:NavLink>
+        </ul>
+        {% endif %}
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            {% if app.user %}
+                <twig:NavLink target="app_logout" label="Logout"></twig:NavLink>
+            {% else %}
+                <twig:NavLink target="app_login" label="Login"></twig:NavLink>
+                <twig:NavLink target="app_register" label="Register"></twig:NavLink>
+            {% endif %}
+        </ul>
     </div>
 </nav>

@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/book')]
 class BookController extends AbstractController
@@ -22,6 +23,7 @@ class BookController extends AbstractController
         return $manager->getPaginated($request);
     }
 
+    #[IsGranted('IS_AUTHENTICATED')]
     #[Route('/{id<\d+>}', name: 'app_book_show', methods: ['GET'])]
     public function show(Book $book): Response
     {
@@ -34,6 +36,10 @@ class BookController extends AbstractController
     #[Route('/{id<\d+>}/edit', name: 'app_book_edit', methods: ['GET', 'POST'])]
     public function newBook(?Book $book, Request $request, BookRepository $repository): Response
     {
+        if ($book) {
+            $this->denyAccessUnlessGranted('book.created', $book);
+        }
+
         $book ??= new Book();
         $form = $this->createForm(BookType::class, $book);
 
